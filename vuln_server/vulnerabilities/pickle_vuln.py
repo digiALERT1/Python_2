@@ -2,7 +2,10 @@ import base64
 import json
 from vuln_server.outputgrabber import OutputGrabber
 from flask import flash, request, redirect, render_template
+import logging
 
+
+logging.basicConfig(level=logging.ERROR)
 
 class PickleVuln():
 
@@ -26,7 +29,8 @@ class PickleVuln():
                             base64.b64decode(request.form['input_data']).decode('utf-8'))
                     return output.capturedtext
                 except Exception as e:
-                    return "Server Error: {}:".format(str(e))
+                    logging.error("Exception occurred", exc_info=True)
+                    return "An internal error has occurred!"
             elif request.files['file'].filename != '':
                 file_data = request.files['file'].read()
                 try:
@@ -35,7 +39,8 @@ class PickleVuln():
                         json.loads(base64.b64decode(file_data).decode('utf-8'))
                     return output.capturedtext
                 except Exception as e:
-                    return "Server Error: {}:".format(str(e))
+                    logging.error("Exception occurred", exc_info=True)
+                    return "An internal error has occurred!"
             else:
                 flash('No selected file')
                 return redirect(request.url)
