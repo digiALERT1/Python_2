@@ -1,5 +1,5 @@
 import base64
-import pickle
+import json
 from vuln_server.outputgrabber import OutputGrabber
 from flask import flash, request, redirect, render_template
 
@@ -22,8 +22,8 @@ class PickleVuln():
                     with output:
                         # Load base64 encoded pickle object, output from the
                         # exploit is stored into Outputgrabber stdout
-                        pickle.loads(
-                            base64.b64decode(request.form['input_data']))
+                        json.loads(
+                            base64.b64decode(request.form['input_data']).decode('utf-8'))
                     return output.capturedtext
                 except Exception as e:
                     return "Server Error: {}:".format(str(e))
@@ -32,7 +32,7 @@ class PickleVuln():
                 try:
                     output = OutputGrabber()
                     with output:
-                        pickle.loads(base64.b64decode(file_data.decode()))
+                        json.loads(base64.b64decode(file_data).decode('utf-8'))
                     return output.capturedtext
                 except Exception as e:
                     return "Server Error: {}:".format(str(e))
