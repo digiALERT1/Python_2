@@ -2,6 +2,7 @@ import base64
 import pickle
 from vuln_server.outputgrabber import OutputGrabber
 from flask import flash, request, redirect, render_template
+from urllib.parse import urlparse
 
 
 class PickleVuln():
@@ -38,5 +39,9 @@ class PickleVuln():
                     return "Server Error: {}:".format(str(e))
             else:
                 flash('No selected file')
-                return redirect(request.url)
+                target_url = request.url.replace('\\', '/')
+                parsed_url = urlparse(target_url)
+                if not parsed_url.netloc and not parsed_url.scheme:
+                    return redirect(target_url)
+                return redirect('/')
         return render_template('pickle.html')
