@@ -16,8 +16,7 @@ class YAMLVuln():
                     with output:
                         # Load unsafe YAML input, output from the exploit
                         # is stored into Outputgrabber stdout
-                        yaml.load(request.form['input_data'],
-                                  Loader=yaml.UnsafeLoader)
+                        yaml.safe_load(request.form['input_data'])
                     return output.capturedtext
                 except Exception as e:
                     return "Server Error: {}:".format(str(e))
