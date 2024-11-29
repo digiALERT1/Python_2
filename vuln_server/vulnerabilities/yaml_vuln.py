@@ -20,7 +20,8 @@ class YAMLVuln():
                                   Loader=yaml.UnsafeLoader)
                     return output.capturedtext
                 except Exception as e:
-                    return "Server Error: {}:".format(str(e))
+                    app.logger.error("Exception occurred", exc_info=True)
+                    return "An internal error has occurred!"
             else:
                 return redirect(request.url)
         return render_template('yaml.html')
