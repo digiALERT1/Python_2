@@ -1,6 +1,5 @@
-from xml.dom.pulldom import parseString
-from xml.sax import make_parser
-from xml.sax.handler import feature_external_ges
+from defusedxml.pulldom import parseString
+
 
 from flask import request, redirect, render_template
 
@@ -14,9 +13,7 @@ class XMLVuln():
             if request.form['input_data'] != '':
                 # Instanciate an XML parser allowing unsafe external
                 # sources to to be parsed by xml.parseString
-                parser = make_parser()
-                parser.setFeature(feature_external_ges, True)
-                doc = parseString(request.form['input_data'], parser=parser)
+                doc = parseString(request.form['input_data'])
                 for event, node in doc:
                     doc.expandNode(node)
                     return(node.toxml())

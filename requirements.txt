@@ -1,2 +1,4 @@
 Flask==1.1.1
 PyYAML
+
+defusedxml==0.7.1
