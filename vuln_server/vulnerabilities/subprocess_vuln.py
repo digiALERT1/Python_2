@@ -16,8 +16,13 @@ class SubprocessVuln():
                     output = OutputGrabber()
                     with output:
                         # Execute system command with an unsafe input parameter
-                        subprocess.call("ping -c1 " +
-                                        request.form['input_data'], shell=True)
+                        # Define an allowlist of acceptable inputs
+                        ALLOWLIST = {'localhost', '127.0.0.1'}
+                        input_data = request.form['input_data']
+                        if input_data in ALLOWLIST:
+                            subprocess.call(["ping", "-c1", input_data])
+                        else:
+                            return "Invalid input"
                     return output.capturedtext
                 except Exception as e:
                     return "Server Error: {}:".format(str(e))
