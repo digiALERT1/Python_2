@@ -2,6 +2,7 @@ import random
 
 from vuln_server.outputgrabber import OutputGrabber
 from flask import request, redirect, render_template
+from urllib.parse import urlparse
 
 
 class EvalVuln():
@@ -23,5 +24,8 @@ class EvalVuln():
                 except Exception as e:
                     return "Server Error: {}:".format(str(e))
             else:
-                return redirect(request.url)
+                target_url = request.url.replace('\\', '')
+                if not urlparse(target_url).netloc and not urlparse(target_url).scheme:
+                    return redirect(target_url)
+                return redirect('/')
         return render_template('eval.html')
